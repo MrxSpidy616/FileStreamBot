@@ -1,4 +1,3 @@
-
 import asyncio
 from FileStream.bot import FileStream, multi_clients
 from FileStream.utils.bot_utils import is_user_banned, is_user_exist, is_user_joined, gen_link, is_channel_banned, is_channel_exist, is_user_authorized
@@ -39,7 +38,11 @@ async def private_receive_handler(bot: Client, message: Message):
         await get_file_ids(False, inserted_id, multi_clients, message)
         reply_markup, stream_text = await gen_link(_id=inserted_id)
         await message.reply_text(
-            text=stream_text
+            text=stream_text,
+            parse_mode=ParseMode.HTML,
+            disable_web_page_preview=True,
+            reply_markup=reply_markup,
+            quote=True
         )
     except FloodWait as e:
         print(f"Sleeping for {str(e.value)}s")
@@ -74,7 +77,10 @@ async def channel_receive_handler(bot: Client, message: Message):
         await bot.edit_message_reply_markup(
             chat_id=message.chat.id,
             message_id=message.id,
-           )
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Dᴏᴡɴʟᴏᴀᴅ ʟɪɴᴋ 📥",
+                                       url=f"https://t.me/{FileStream.username}?start=stream_{str(inserted_id)}")]])
+        )
 
     except FloodWait as w:
         print(f"Sleeping for {str(w.x)}s")
