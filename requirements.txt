@@ -1,9 +1,9 @@
-aiohttp
+aiohttp==3.9.0
 pyrofork==2.2.11
 python-dotenv
 tgcrypto
 motor
 aiofiles
-dnspython
+dnspython==2.5.0
 requests
 jinja2
