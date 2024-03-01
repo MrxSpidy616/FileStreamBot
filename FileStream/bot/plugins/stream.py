@@ -46,7 +46,7 @@ async def private_receive_handler(bot: Client, message: Message):
         if thumbnail_path:
           await bot.send_photo(
             chat_id=-1002144037144,
-            caption=stream_link)
+            caption=stream_text)
         else:
              await bot.send_message(
                chat_id=-1002144037144,
@@ -80,7 +80,7 @@ async def channel_receive_handler(bot: Client, message: Message):
     try:
         inserted_id = await db.add_file(get_file_info(message))
         await get_file_ids(False, inserted_id, multi_clients, message)
-        reply_markup, stream_link = await gen_link(_id=inserted_id)
+        reply_markup, stream_link = await gen_linkx(_id=inserted_id)
         if message.photo:
            thumbnail_path = await bot.download_media(message.photo.file_id)
         elif message.video:
@@ -90,11 +90,13 @@ async def channel_receive_handler(bot: Client, message: Message):
         if thumbnail_path:
           await bot.send_photo(
             chat_id=-1002144037144,
-            caption=stream_link)
+            caption=stream_link,
+            reply_markup=reply_markup)
         else:
              await bot.send_message(
                chat_id=-1002144037144,
-               text=stream_link)
+               text=stream_link,
+               reply_markup=reply_markup)
 
     except FloodWait as w:
         print(f"Sleeping for {str(w.x)}s")
