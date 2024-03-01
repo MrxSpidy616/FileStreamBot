@@ -1,6 +1,6 @@
 import asyncio
 from FileStream.bot import FileStream, multi_clients
-from FileStream.utils.bot_utils import is_user_banned, is_user_exist, is_user_joined, gen_link, is_channel_banned, is_channel_exist, is_user_authorized
+from FileStream.utils.bot_utils import is_user_banned, is_user_exist, is_user_joined, gen_linkx, gen_link,is_channel_banned, is_channel_exist, is_user_authorized
 from FileStream.utils.database import Database
 from FileStream.utils.file_properties import get_file_ids, get_file_info
 from FileStream.config import Telegram
@@ -39,18 +39,19 @@ async def private_receive_handler(bot: Client, message: Message):
         reply_markup, stream_text = await gen_link(_id=inserted_id)
         if message.photo:
            thumbnail_path = await bot.download_media(message.photo.file_id)
-        elif message.video:
+        elif message.video.thumbs:
             thumbnail_path = await bot.download_media(message.video.thumbs[0].file_id)
-        elif message.document and message.document.thumbs[0].file_id:
-            thumbnail_path = await bot.download_media(message.document.thumbs[0].file_id)
+        elif message.document.thumbs:          
+           thumbnail_path = await bot.download_media(message.document.thumbs[0].file_id)
         if thumbnail_path:
           await bot.send_photo(
             chat_id=-1002144037144,
+            photo=thumbnail_path,
             caption=stream_text)
         else:
              await bot.send_message(
                chat_id=-1002144037144,
-               text=stream_link)
+               text=stream_text)
     except FloodWait as e:
         print(f"Sleeping for {str(e.value)}s")
         await asyncio.sleep(e.value)
@@ -90,6 +91,7 @@ async def channel_receive_handler(bot: Client, message: Message):
         if thumbnail_path:
           await bot.send_photo(
             chat_id=-1002144037144,
+            photo=thumbnail_path,
             caption=stream_link,
             reply_markup=reply_markup)
         else:
