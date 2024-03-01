@@ -38,11 +38,11 @@ async def private_receive_handler(bot: Client, message: Message):
         await get_file_ids(False, inserted_id, multi_clients, message)
         reply_markup, stream_text = await gen_link(_id=inserted_id)
         if message.photo:
-           thumbnail_path = await app.download_media(message.photo.file_id)
+           thumbnail_path = await bot.download_media(message.photo.file_id)
         elif message.video:
-            thumbnail_path = await app.download_media(message.video.thumbs[0].file_id)
+            thumbnail_path = await bot.download_media(message.video.thumbs[0].file_id)
         elif message.document and message.document.thumbs[0].file_id:
-            thumbnail_path = await app.download_media(message.document.thumbs[0].file_id)
+            thumbnail_path = await bot.download_media(message.document.thumbs[0].file_id)
         if thumbnail_path:
           await bot.send_photo(
             chat_id=-1002144037144,
@@ -82,11 +82,11 @@ async def channel_receive_handler(bot: Client, message: Message):
         await get_file_ids(False, inserted_id, multi_clients, message)
         reply_markup, stream_link = await gen_link(_id=inserted_id)
         if message.photo:
-           thumbnail_path = await app.download_media(message.photo.file_id)
+           thumbnail_path = await bot.download_media(message.photo.file_id)
         elif message.video:
-            thumbnail_path = await app.download_media(message.video.thumbs[0].file_id)
+            thumbnail_path = await bot.download_media(message.video.thumbs[0].file_id)
         elif message.document and message.document.thumbs[0].file_id:
-            thumbnail_path = await app.download_media(message.document.thumbs[0].file_id)
+            thumbnail_path = await bot.download_media(message.document.thumbs[0].file_id)
         if thumbnail_path:
           await bot.send_photo(
             chat_id=-1002144037144,
