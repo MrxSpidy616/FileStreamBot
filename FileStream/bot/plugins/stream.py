@@ -73,7 +73,7 @@ async def private_receive_handler(bot: Client, message: Message):
     )
 )
 async def channel_receive_handler(bot: Client, message: Message):
-    if await is_channel_banned(bot, message):
+    if await is_channel_banned(bot, message) and message.chat_id != Telegram.FLOG_CHANNEL:
         return
     await is_channel_exist(bot, message)
 
