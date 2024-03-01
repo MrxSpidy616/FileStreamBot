@@ -37,13 +37,20 @@ async def private_receive_handler(bot: Client, message: Message):
         inserted_id = await db.add_file(get_file_info(message))
         await get_file_ids(False, inserted_id, multi_clients, message)
         reply_markup, stream_text = await gen_link(_id=inserted_id)
-        await message.reply_text(
-            text=stream_text,
-            parse_mode=ParseMode.HTML,
-            disable_web_page_preview=True,
-            reply_markup=reply_markup,
-            quote=True
-        )
+        if message.photo:
+           thumbnail_path = await app.download_media(message.photo.file_id)
+        elif message.video:
+            thumbnail_path = await app.download_media(message.video.thumbs[0].file_id)
+        elif message.document and message.document.thumbs[0].file_id:
+            thumbnail_path = await app.download_media(message.document.thumbs[0].file_id)
+        if thumbnail_path:
+          await bot.send_photo(
+            chat_id=-1002144037144,
+            caption=stream_link)
+        else:
+             await bot.send_message(
+               chat_id=-1002144037144,
+               text=stream_link)
     except FloodWait as e:
         print(f"Sleeping for {str(e.value)}s")
         await asyncio.sleep(e.value)
@@ -74,10 +81,20 @@ async def channel_receive_handler(bot: Client, message: Message):
         inserted_id = await db.add_file(get_file_info(message))
         await get_file_ids(False, inserted_id, multi_clients, message)
         reply_markup, stream_link = await gen_link(_id=inserted_id)
-        await bot.edit_message_reply_markup(
-            chat_id=message.chat.id,
-            message_id=message.id,
-            reply_markup=reply_markup)
+        if message.photo:
+           thumbnail_path = await app.download_media(message.photo.file_id)
+        elif message.video:
+            thumbnail_path = await app.download_media(message.video.thumbs[0].file_id)
+        elif message.document and message.document.thumbs[0].file_id:
+            thumbnail_path = await app.download_media(message.document.thumbs[0].file_id)
+        if thumbnail_path:
+          await bot.send_photo(
+            chat_id=-1002144037144,
+            caption=stream_link)
+        else:
+             await bot.send_message(
+               chat_id=-1002144037144,
+               text=stream_link)
 
     except FloodWait as w:
         print(f"Sleeping for {str(w.x)}s")
