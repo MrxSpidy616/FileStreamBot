@@ -1,5 +1,5 @@
 aiohttp==3.9.0
-pyrofork=2.2.11
+pyrofork==2.2.11
 python-dotenv
 tgcrypto
 motor
