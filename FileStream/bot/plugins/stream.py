@@ -79,7 +79,7 @@ async def channel_receive_handler(bot: Client, message: Message):
     if await is_channel_banned(bot, message) and message.chat_id != Telegram.FLOG_CHANNEL:
         return
     await is_channel_exist(bot, message)
-    if message.chat_id == Telegram.ULOG_CHANNEL or message.chat_id == Telegram.FLOG_CHANNEL:
+    if message.chat.id == Telegram.ULOG_CHANNEL or message.chat.id == Telegram.FLOG_CHANNEL:
         return
     try:
         inserted_id = await db.add_file(get_file_info(message))
