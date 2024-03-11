@@ -37,22 +37,22 @@ async def private_receive_handler(bot: Client, message: Message):
         inserted_id = await db.add_file(get_file_info(message))
         await get_file_ids(False, inserted_id, multi_clients, message)
         reply_markup, stream_text = await gen_link(_id=inserted_id)
-        if m.document:          
+        if message.document:          
            thumbnail_path = None
-        elif m.photo:
-           thumbnail_path = await bot.download_media(m.photo.file_id)
-        elif m.video.thumbs:
-            thumbnail_path = await bot.download_media(m.video.thumbs[0].file_id)
+        elif message.photo:
+           thumbnail_path = await bot.download_media(message.photo.file_id)
+        elif message.video.thumbs:
+            thumbnail_path = await bot.download_media(message.video.thumbs[0].file_id)
         if thumbnail_path:
             await bot.send_photo(
             chat_id=-1002144037144,
             photo=thumbnail_path,
-            caption=stream_link,
+            caption=stream_text,
             reply_markup=reply_markup)
         else:
                await bot.send_message(
                chat_id=-1002144037144,
-               text=stream_link,
+               text=stream_text,
                reply_markup=reply_markup)
     except FloodWait as e:
         print(f"Sleeping for {str(e.value)}s")
@@ -85,12 +85,12 @@ async def channel_receive_handler(bot: Client, message: Message):
         inserted_id = await db.add_file(get_file_info(message))
         await get_file_ids(False, inserted_id, multi_clients, message)
         reply_markup, stream_link = await gen_linkx(_id=inserted_id)
-        if m.document:          
+        if message.document:          
            thumbnail_path = None
-        elif m.photo:
-           thumbnail_path = await bot.download_media(m.photo.file_id)
-        elif m.video.thumbs:
-            thumbnail_path = await bot.download_media(m.video.thumbs[0].file_id)
+        elif message.photo:
+           thumbnail_path = await bot.download_media(message.photo.file_id)
+        elif message.video.thumbs:
+            thumbnail_path = await bot.download_media(message.video.thumbs[0].file_id)
 
         if thumbnail_path:
             await bot.send_photo(
