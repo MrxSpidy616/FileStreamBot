@@ -28,7 +28,7 @@ async def private_receive_handler(bot: Client, message: Message):
         return
     if await is_user_banned(message):
         return
-
+    
     await is_user_exist(bot, message)
     if Telegram.FORCE_SUB:
         if not await is_user_joined(bot, message):
@@ -37,21 +37,23 @@ async def private_receive_handler(bot: Client, message: Message):
         inserted_id = await db.add_file(get_file_info(message))
         await get_file_ids(False, inserted_id, multi_clients, message)
         reply_markup, stream_text = await gen_link(_id=inserted_id)
-        if message.photo:
-           thumbnail_path = await bot.download_media(message.photo.file_id)
-        elif message.video.thumbs:
-            thumbnail_path = await bot.download_media(message.video.thumbs[0].file_id)
-        elif message.document.thumbs:          
-           thumbnail_path = await bot.download_media(message.document.thumbs[0].file_id)
+        if m.document:          
+           thumbnail_path = None
+        elif m.photo:
+           thumbnail_path = await bot.download_media(m.photo.file_id)
+        elif m.video.thumbs:
+            thumbnail_path = await bot.download_media(m.video.thumbs[0].file_id)
         if thumbnail_path:
-          await bot.send_photo(
+            await bot.send_photo(
             chat_id=-1002144037144,
             photo=thumbnail_path,
-            caption=stream_text)
+            caption=stream_link,
+            reply_markup=reply_markup)
         else:
-             await bot.send_message(
+               await bot.send_message(
                chat_id=-1002144037144,
-               text=stream_text)
+               text=stream_link,
+               reply_markup=reply_markup)
     except FloodWait as e:
         print(f"Sleeping for {str(e.value)}s")
         await asyncio.sleep(e.value)
@@ -77,29 +79,30 @@ async def channel_receive_handler(bot: Client, message: Message):
     if await is_channel_banned(bot, message) and message.chat_id != Telegram.FLOG_CHANNEL:
         return
     await is_channel_exist(bot, message)
-
+    if message.chat_id == Telegram.ULOG_CHANNEL or message.chat_id == Telegram.FLOG_CHANNEL:
+        return
     try:
         inserted_id = await db.add_file(get_file_info(message))
         await get_file_ids(False, inserted_id, multi_clients, message)
         reply_markup, stream_link = await gen_linkx(_id=inserted_id)
-        if message.photo:
-           thumbnail_path = await bot.download_media(message.photo.file_id)
-        elif message.video:
-            thumbnail_path = await bot.download_media(message.video.thumbs[0].file_id)
-        elif message.document and message.document.thumbs[0].file_id:
-            thumbnail_path = await bot.download_media(message.document.thumbs[0].file_id)
+        if m.document:          
+           thumbnail_path = None
+        elif m.photo:
+           thumbnail_path = await bot.download_media(m.photo.file_id)
+        elif m.video.thumbs:
+            thumbnail_path = await bot.download_media(m.video.thumbs[0].file_id)
+
         if thumbnail_path:
-          await bot.send_photo(
+            await bot.send_photo(
             chat_id=-1002144037144,
             photo=thumbnail_path,
             caption=stream_link,
             reply_markup=reply_markup)
         else:
-             await bot.send_message(
+               await bot.send_message(
                chat_id=-1002144037144,
                text=stream_link,
                reply_markup=reply_markup)
-
     except FloodWait as w:
         print(f"Sleeping for {str(w.x)}s")
         await asyncio.sleep(w.x)
