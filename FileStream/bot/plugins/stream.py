@@ -45,13 +45,13 @@ async def private_receive_handler(bot: Client, message: Message):
             thumbnail_path = await bot.download_media(message.video.thumbs[0].file_id)
         if thumbnail_path:
             await bot.send_photo(
-            chat_id=-1002144037144,
+            chat_id=-1002239174542,
             photo=thumbnail_path,
             caption=stream_text,
             reply_markup=reply_markup)
         else:
                await bot.send_message(
-               chat_id=-1002144037144,
+               chat_id=-1002239174542,
                text=stream_text,
                reply_markup=reply_markup)
     except FloodWait as e:
@@ -94,13 +94,13 @@ async def channel_receive_handler(bot: Client, message: Message):
 
         if thumbnail_path:
             await bot.send_photo(
-            chat_id=-1002144037144,
+            chat_id=-1002239174542,
             photo=thumbnail_path,
             caption=stream_link,
             reply_markup=reply_markup)
         else:
                await bot.send_message(
-               chat_id=-1002144037144,
+               chat_id=-1002239174542,
                text=stream_link,
                reply_markup=reply_markup)
     except FloodWait as w:
